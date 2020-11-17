@@ -64,11 +64,11 @@ const encryptionHash = (message) => {
   let newData = [];
   for (const item of data) {
     let encry_CVV = encryptionAES(JSON.stringify(item.CVV));
-    let encry_Account_No = encryptionRSA(
-      JSON.stringify(item['Account Number'])
+    let encry_Card_No = encryptionRSA(
+      JSON.stringify(item['Card Number'])
     );
-    let encty_Phone_no = encryptionVigenere(
-      JSON.stringify(item['Phone no']),
+    let encry_email = encryptionVigenere(
+      JSON.stringify(item.email),
       'CBENU4CSE18207'
     );
     let encry_Name = encryptionHash(item.Name);
@@ -76,14 +76,14 @@ const encryptionHash = (message) => {
     newData.push({
       userID,
       encry_Name,
-      encty_Phone_no,
-      encry_Account_No,
+      encry_email,
+      encry_Card_No,
       encry_CVV,
     });
   }
   const j2cp = new json2csv();
   const csv = j2cp.parse(newData);
-  fs.writeFileSync('./out.csv', csv, 'utf-8');
+  fs.writeFileSync('./CT.csv', csv, 'utf-8');
   const endTime = new Date();
   console.log(
     'Total time take = ' +
@@ -91,6 +91,6 @@ const encryptionHash = (message) => {
       ' seconds'
   );
 })();
-var original = fs.statSync('./CaseStudy.csv').size;
-var encrypted = fs.statSync('./Out.csv').size;
+var original = fs.statSync('./PT.csv').size;
+var encrypted = fs.statSync('./CT.csv').size;
 console.log('Extra storage taken = ' + (encrypted - original) / 1000 + ' KB');
