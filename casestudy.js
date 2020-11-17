@@ -10,18 +10,6 @@ const { publicKey } = crypto.generateKeyPairSync('rsa', {
 });
 
 const startTime = new Date();
-//RSA
-const encryptionRSA = (message) => {
-  const encryptedData = crypto.publicEncrypt(
-    {
-      key: publicKey,
-      padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
-      oaepHash: 'sha256',
-    },
-    Buffer.from(message)
-  );
-  return encryptedData.toString('base64');
-};
 
 //AES
 const encryptionAES = (message) => {
@@ -35,6 +23,19 @@ const encryptionAES = (message) => {
     cipher.update(message, bufferEncryption, encryptionEncoding) +
     cipher.final('base64');
   return encrypted;
+};
+
+//RSA
+const encryptionRSA = (message) => {
+  const encryptedData = crypto.publicEncrypt(
+    {
+      key: publicKey,
+      padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+      oaepHash: 'sha256',
+    },
+    Buffer.from(message)
+  );
+  return encryptedData.toString('base64');
 };
 
 //VIGENERE
@@ -62,8 +63,8 @@ const encryptionHash = (message) => {
 (async () => {
   let newData = [];
   for (const item of data) {
-    const encry_CVV = encryptionRSA(JSON.stringify(item.CVV));
-    let encry_Account_No = encryptionAES(
+    let encry_CVV = encryptionAES(JSON.stringify(item.CVV));
+    let encry_Account_No = encryptionRSA(
       JSON.stringify(item['Account Number'])
     );
     let encty_Phone_no = encryptionVigenere(
